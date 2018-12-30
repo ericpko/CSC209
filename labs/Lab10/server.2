@@ -1,0 +1,170 @@
+Script started on 2018-11-20 18:47:58-0500
+]0;eric@eric: ~/UofT/Courses/CSC209/koehlier/Lab10[01;32meric@eric[00m:[01;34m~/UofT/Courses/CSC209/koehlier/Lab10[00m$ gdb ./bufserver 
+GNU gdb (Ubuntu 8.1-0ubuntu3) 8.1.0.20180409-git
+Copyright (C) 2018 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./bufserver...done.
+(gdb) break [K[K[K[K[K main
+Breakpoint 1 at 0xce2: file bufserver.c, line 18.
+(gdb) run
+Starting program: /home/eric/UofT/Courses/CSC209/koehlier/Lab10/bufserver 
+
+Breakpoint 1, main () at bufserver.c:18
+18	int main() {
+(gdb) n
+21	    setbuf(stdout, NULL);
+(gdb) n
+24	    struct sockaddr_in *server_addr = init_server_addr(PORT);
+(gdb) n
+25	    int listen_soc = set_up_server_socket(server_addr, 5);
+(gdb) n
+28	        int client_soc = accept_connection(listen_soc);
+(gdb) run
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /home/eric/UofT/Courses/CSC209/koehlier/Lab10/bufserver 
+
+Breakpoint 1, main () at bufserver.c:18
+18	int main() {
+(gdb) n
+21	    setbuf(stdout, NULL);
+(gdb) n
+24	    struct sockaddr_in *server_addr = init_server_addr(PORT);
+(gdb) b 40
+Breakpoint 2 at 0x555555554d79: file bufserver.c, line 40.
+(gdb) c
+Continuing.
+Waiting for a new connection...
+New connection accepted from 127.0.0.1:53640
+
+Breakpoint 2, main () at bufserver.c:40
+40	        while ((nbytes = read(client_soc, after, room - 1)) > 0) {
+(gdb) display inbuf
+1: inbuf = 0
+(gdb) display room
+2: room = 30
+(gdb) n
+42	            inbuf += nbytes;
+1: inbuf = 0
+2: room = 30
+(gdb) n
+53	            while ((where = find_network_newline(buf, inbuf)) > 0) {
+1: inbuf = 15
+2: room = 30
+(gdb) print buf
+$1 = "A stitch in tim", '\000' <repeats 14 times>
+(gdb) print after
+$2 = 0x7fffffffdd30 "A stitch in tim"
+(gdb) n
+78	            after = &buf[inbuf];
+1: inbuf = 15
+2: room = 30
+(gdb) print buf
+$3 = "A stitch in tim", '\000' <repeats 14 times>
+(gdb) print after
+$4 = 0x7fffffffdd30 "A stitch in tim"
+(gdb) n
+79	            room = BUFSIZE - inbuf;
+1: inbuf = 15
+2: room = 30
+(gdb) n
+40	        while ((nbytes = read(client_soc, after, room - 1)) > 0) {
+1: inbuf = 15
+2: room = 15
+(gdb) print buf
+$5 = "A stitch in tim", '\000' <repeats 14 times>
+(gdb) print after
+$6 = 0x7fffffffdd3f ""
+(gdb) n
+42	            inbuf += nbytes;
+1: inbuf = 15
+2: room = 15
+(gdb) n
+53	            while ((where = find_network_newline(buf, inbuf)) > 0) {
+1: inbuf = 29
+2: room = 15
+(gdb) print buf
+$7 = "A stitch in time\r\nA stitch in"
+(gdb) print after
+$8 = 0x7fffffffdd3f "e\r\nA stitch in"
+(gdb) n
+59	                buf[where - 2] = '\0';
+1: inbuf = 29
+2: room = 15
+(gdb) n
+62	                printf("Next message: %s\n", buf);
+1: inbuf = 29
+2: room = 15
+(gdb) n
+Next message: A stitch in time
+72	                memmove(&buf[0], &buf[where], inbuf - where);
+1: inbuf = 29
+2: room = 15
+(gdb) print buf
+$9 = "A stitch in time\000\nA stitch in"
+(gdb) print after
+$10 = 0x7fffffffdd3f "e"
+(gdb) n
+73	                inbuf -= where;
+1: inbuf = 29
+2: room = 15
+(gdb) n
+53	            while ((where = find_network_newline(buf, inbuf)) > 0) {
+1: inbuf = 11
+2: room = 15
+(gdb) print buf
+$11 = "A stitch in time\000\nA stitch in"
+(gdb) print after
+$12 = 0x7fffffffdd3f "e"
+(gdb) n
+78	            after = &buf[inbuf];
+1: inbuf = 11
+2: room = 15
+(gdb) n
+79	            room = BUFSIZE - inbuf;
+1: inbuf = 11
+2: room = 15
+(gdb) n
+40	        while ((nbytes = read(client_soc, after, room - 1)) > 0) {
+1: inbuf = 11
+2: room = 19
+(gdb) print buf
+$13 = "A stitch in time\000\nA stitch in"
+(gdb) print after
+$14 = 0x7fffffffdd3b " time"
+(gdb) n
+42	            inbuf += nbytes;
+1: inbuf = 11
+2: room = 19
+(gdb) continue
+Continuing.
+Next message: A stitch in time
+Next message: A stitch in time
+Next message: A stitch in time
+Next message: A stitch in time
+Waiting for a new connection...
+^Z
+Program received signal SIGTSTP, Stopped (user).
+0x00007ffff7b067e4 in __libc_accept (fd=3, addr=..., len=0x7fffffffdcb8) at ../sysdeps/unix/sysv/linux/accept.c:26
+26	../sysdeps/unix/sysv/linux/accept.c: No such file or directory.
+(gdb) quit
+A debugging session is active.
+
+	Inferior 1 [process 7347] will be killed.
+
+Quit anyway? (y or n) y
+]0;eric@eric: ~/UofT/Courses/CSC209/koehlier/Lab10[01;32meric@eric[00m:[01;34m~/UofT/Courses/CSC209/koehlier/Lab10[00m$ exit
+exit
+
+Script done on 2018-11-20 19:02:56-0500
