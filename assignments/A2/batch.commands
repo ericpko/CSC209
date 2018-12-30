@@ -1,0 +1,40 @@
+add_ta Stathis
+add_ta Elaine
+add_ta Huiting
+add_ta Demetres
+add_student Michelle CSC108
+sleep
+add_student Eric CSC209
+sleep
+add_student Jen CSC108
+sleep
+add_student Peter CSC209
+add_student Paul CSC108
+sleep
+add_student Heather CSC209
+sleep
+add_student Diane CSC108
+add_student Daniel CSC165
+sleep
+add_student Jacob CSC165
+sleep
+add_student Steve CSC108
+print_full_queue
+next Elaine
+sleep
+next Stathis
+next Huiting CSC209
+sleep
+print_full_queue
+print_currently_serving
+stats_by_course CSC108
+remove_ta Stathis
+give_up Diane
+next Elaine
+sleep
+next Huiting CSC108
+sleep
+stats_by_course CSC108
+remove_ta Stathis
+print_full_queue
+quit
